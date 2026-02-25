@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PINK SHADOW | NEURAL INTERFACE</title>
+    <title>PINK SHADOW OS | ULTIMATE EDITION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -11,24 +11,25 @@
 
         :root {
             --pink-neon: #ff007f;
-            --pink-glass: rgba(255, 0, 127, 0.1);
-            --dark-glass: rgba(10, 0, 5, 0.85);
+            --pink-glass: rgba(255, 0, 127, 0.15);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
 
         body { 
-            background: #050002; 
-            color: #fff; 
-            overflow: hidden; 
-            font-family: 'Rajdhani', sans-serif;
+            background: #000; color: #fff; 
+            overflow: hidden; font-family: 'Rajdhani', sans-serif;
+        }
+
+        /* جزيئات الخلفية */
+        #particles-js {
+            position: fixed; inset: 0; z-index: 5; pointer-events: none;
         }
 
         .app-container { 
             height: 100vh; width: 100vw;
-            overflow-y: scroll; 
-            scroll-snap-type: y mandatory; 
-            scrollbar-width: none;
+            overflow-y: scroll; scroll-snap-type: y mandatory; 
+            scrollbar-width: none; position: relative; z-index: 10;
         }
         .app-container::-webkit-scrollbar { display: none; }
 
@@ -37,85 +38,77 @@
         .video-background { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
         video { width: 100%; height: 100%; object-fit: cover; }
 
-        /* طبقة الوردي الزجاجي */
         .pink-vignette {
             position: absolute; inset: 0;
-            background: linear-gradient(to bottom, rgba(255, 0, 127, 0.2) 0%, transparent 30%, transparent 70%, rgba(20, 0, 10, 0.9) 100%);
+            background: linear-gradient(to bottom, rgba(255, 0, 127, 0.1) 0%, transparent 40%, rgba(0, 0, 0, 0.9) 100%);
             z-index: 2; pointer-events: none;
         }
 
-        /* نافذة التعليقات الوردية */
+        /* نافذة التعليقات */
         .comments-panel {
-            position: fixed; bottom: -100%; left: 0; width: 100%; height: 65%;
-            background: var(--dark-glass); backdrop-filter: blur(30px);
+            position: fixed; bottom: -100%; left: 0; width: 100%; height: 60%;
+            background: rgba(10, 0, 5, 0.9); backdrop-filter: blur(30px);
             border-top: 2px solid var(--pink-neon); border-radius: 35px 35px 0 0;
-            z-index: 2000; transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-            padding: 30px; box-shadow: 0 -10px 30px rgba(255, 0, 127, 0.2);
+            z-index: 2000; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            padding: 30px; box-shadow: 0 -10px 40px rgba(255, 0, 127, 0.3);
         }
         .comments-panel.active { bottom: 0; }
 
-        .avatar {
-            width: 45px; height: 45px; border-radius: 12px;
-            border: 1px solid var(--pink-neon);
-            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
-        }
-
-        .comment-text-box {
-            background: rgba(255, 255, 255, 0.03); padding: 12px;
-            border-radius: 0 15px 15px 15px; flex: 1;
-            border-left: 2px solid var(--pink-neon);
-        }
-
-        /* القائمة الجانبية الوردية */
-        .side-dock { position: absolute; right: 20px; bottom: 120px; z-index: 100; display: flex; flex-direction: column; gap: 20px; }
+        /* القائمة الجانبية */
+        .side-dock { position: absolute; right: 20px; bottom: 120px; z-index: 100; display: flex; flex-direction: column; gap: 18px; }
         .dock-item {
-            width: 55px; height: 55px; background: var(--pink-glass);
-            backdrop-filter: blur(15px); border-radius: 18px;
+            width: 50px; height: 50px; background: var(--pink-glass);
+            backdrop-filter: blur(15px); border-radius: 15px;
             display: flex; align-items: center; justify-content: center;
-            border: 1px solid rgba(255, 0, 127, 0.3); cursor: pointer; transition: 0.4s;
+            border: 1px solid rgba(255, 0, 127, 0.3); cursor: pointer; transition: 0.3s;
             color: var(--pink-neon);
         }
-        .dock-item:hover { background: var(--pink-neon); color: #fff; box-shadow: 0 0 25px var(--pink-neon); }
+        .dock-item:hover { transform: scale(1.1); background: var(--pink-neon); color: #fff; box-shadow: 0 0 20px var(--pink-neon); }
 
-        .progress-line { position: absolute; bottom: 0; left: 0; height: 4px; background: var(--pink-neon); width: 0%; z-index: 100; box-shadow: 0 0 15px var(--pink-neon); }
-        
-        .header-logo { font-family: 'Orbitron'; color: var(--pink-neon); text-shadow: 0 0 10px var(--pink-neon); }
+        /* تأثير القلب عند النقر المزدوج */
+        .heart-pop {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            color: var(--pink-neon); font-size: 80px; z-index: 1000;
+            pointer-events: none; filter: drop-shadow(0 0 15px var(--pink-neon));
+        }
+        .heart-animate { animation: heartPop 0.8s ease-out forwards; }
+        @keyframes heartPop { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; } }
+
+        .progress-line { position: absolute; bottom: 0; left: 0; height: 4px; background: var(--pink-neon); width: 0%; z-index: 100; box-shadow: 0 0 10px var(--pink-neon); transition: 0.1s linear; }
+        .header-logo { font-family: 'Orbitron'; color: var(--pink-neon); text-shadow: 0 0 15px var(--pink-neon); }
     </style>
 </head>
 <body>
 
+    <div id="particles-js"></div>
+
+    <i id="heart" class="fas fa-heart heart-pop"></i>
+
     <div class="fixed top-0 w-full z-[1000] p-6 flex justify-between items-start pointer-events-none">
         <div>
-            <h1 class="header-logo text-2xl font-black italic tracking-tighter">PINK.SHΔDØW</h1>
-            <div id="clock" class="text-[10px] text-pink-300/50 mt-1 tracking-[3px]">00:00:00</div>
+            <h1 class="header-logo text-2xl font-black italic tracking-tighter uppercase">Pink.OS</h1>
+            <div id="clock" class="text-[10px] text-pink-300/60 mt-1 tracking-[4px]">00:00:00</div>
         </div>
-        <div class="px-4 py-1 border border-pink-500/30 rounded-full text-[9px] uppercase tracking-widest bg-black/60 text-pink-400">System: Fluid</div>
+        <div class="px-4 py-1 border border-pink-500/30 rounded-full text-[9px] uppercase tracking-widest bg-black/70 text-pink-400 backdrop-blur-md">Secure.Node</div>
     </div>
 
     <div class="app-container" id="feed"></div>
 
     <div id="commentBox" class="comments-panel">
-        <div class="w-16 h-1 bg-pink-500/30 mx-auto mb-6 rounded-full cursor-pointer" onclick="toggleComments()"></div>
-        <h2 class="text-pink-500 font-bold mb-6 text-center italic uppercase tracking-widest" style="font-family: 'Orbitron';">Neural Comments</h2>
-        <div id="commentsList" class="overflow-y-auto h-[80%] pr-2"></div>
+        <div class="w-16 h-1 bg-pink-500/40 mx-auto mb-6 rounded-full cursor-pointer" onclick="toggleComments()"></div>
+        <div id="commentsList" class="overflow-y-auto h-[90%] space-y-6 pr-2"></div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
         const cloudName = 'dssk5tabb';
-        // الترتيب الدقيق
         const videoData = [
             { id: '02_nz4lq0', title: 'Neon Pulse' },
-            { id: '03_wicOob', title: 'Cyber Glow' },
-            { id: '04_qeyknx', title: 'Pink Logic' },
-            { id: '05_ggqazk', title: 'Secure Flow' },
-            { id: '07_rone4t', title: 'Aether Node' },
-            { id: '06_quce2q', title: 'End Stream' }
-        ];
-
-        const commentsData = [
-            { user: "Pink_Hacker", text: "تصميم اللون الوردي خيالي! ✨", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=Pinky" },
-            { user: "Cyber_Lady", text: "الواجهة الزجاجية تعطي فخامة غير عادية.", img: "https://api.dicebear.com/7.x/pixel-art/svg?seed=Lady" },
-            { user: "Neon_Ghost", text: "أجمل نسخة حتى الآن.", img: "https://api.dicebear.com/7.x/bottts/svg?seed=Neon" }
+            { id: '03_wicOob', title: 'Pink Stream' },
+            { id: '04_qeyknx', title: 'Aether Logic' },
+            { id: '05_ggqazk', title: 'Core Shield' },
+            { id: '07_rone4t', title: 'Shadow Layer' },
+            { id: '06_quce2q', title: 'Final Sync' }
         ];
 
         const feed = document.getElementById('feed');
@@ -123,6 +116,7 @@
         videoData.forEach((item) => {
             const card = document.createElement('div');
             card.className = 'video-card';
+            card.setAttribute('ondblclick', 'showHeart()');
             card.innerHTML = `
                 <div class="video-background">
                     <video loop playsinline muted src="https://res.cloudinary.com/${cloudName}/video/upload/q_auto,f_auto/${item.id}.mp4"></video>
@@ -131,33 +125,36 @@
                 <div class="progress-line" id="line-${item.id}"></div>
 
                 <div class="side-dock">
-                    <div class="dock-item" style="color:#ff4b91"><i class="fas fa-heart text-xl"></i></div>
-                    <div class="dock-item" onclick="toggleComments()"><i class="fas fa-comment-dots text-xl"></i></div>
-                    <div class="dock-item"><i class="fas fa-paper-plane text-xl"></i></div>
+                    <div class="dock-item" onclick="showHeart()"><i class="fas fa-heart"></i></div>
+                    <div class="dock-item" onclick="toggleComments()"><i class="fas fa-comment-dots"></i></div>
+                    <div class="dock-item"><i class="fas fa-satellite-dish"></i></div>
                 </div>
 
-                <div class="absolute bottom-10 left-8 z-[100] pointer-events-none text-right" style="right: 80px; left: auto;">
-                    <div class="text-pink-500 text-[10px] font-bold mb-1 tracking-[4px]">NODE_${item.id}</div>
-                    <h2 class="text-3xl font-black uppercase italic leading-none text-white" style="font-family:'Orbitron';">${item.title}</h2>
+                <div class="absolute bottom-10 right-10 z-[100] text-right pointer-events-none">
+                    <h2 class="text-3xl font-black italic uppercase text-white tracking-tighter" style="font-family:'Orbitron';">${item.title}</h2>
+                    <p class="text-pink-500/70 text-[10px] font-bold tracking-[5px] mt-1">NODE::${item.id}</p>
                 </div>
             `;
             feed.appendChild(card);
         });
 
+        function showHeart() {
+            const heart = document.getElementById('heart');
+            heart.classList.remove('heart-animate');
+            void heart.offsetWidth; // Trigger reflow
+            heart.classList.add('heart-animate');
+        }
+
         function toggleComments() {
             const box = document.getElementById('commentBox');
             box.classList.toggle('active');
             if(box.classList.contains('active')) {
-                const list = document.getElementById('commentsList');
-                list.innerHTML = commentsData.map(c => `
-                    <div class="flex gap-4 mb-6">
-                        <img src="${c.img}" class="avatar">
-                        <div class="comment-text-box">
-                            <div class="text-pink-500 text-[10px] font-bold uppercase mb-1">${c.user}</div>
-                            <div class="text-sm text-pink-50/80">${c.text}</div>
-                        </div>
+                document.getElementById('commentsList').innerHTML = `
+                    <div class="flex gap-4 items-center bg-white/5 p-4 rounded-2xl border-l-4 border-pink-500">
+                        <img src="https://api.dicebear.com/7.x/pixel-art/svg?seed=pink" class="w-10 h-10 rounded-lg border border-pink-500">
+                        <div><div class="text-pink-500 text-[10px] font-bold">CYBER_USER</div><div class="text-sm">اللون الوردي مذهل جداً هنا! 🌸</div></div>
                     </div>
-                `).join('');
+                `;
             }
         }
 
@@ -174,11 +171,20 @@
 
         document.querySelectorAll('.video-card').forEach(c => observer.observe(c));
 
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
-        }, 1000);
-
+        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
         window.onclick = () => { document.querySelectorAll('video').forEach(v => v.muted = false); };
+
+        // Particle configuration
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 40 },
+                "color": { "value": "#ff007f" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.3 },
+                "size": { "value": 2 },
+                "move": { "enable": true, "speed": 1.5, "direction": "bottom" }
+            }
+        });
     </script>
 </body>
 </html>
